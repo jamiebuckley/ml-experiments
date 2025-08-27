@@ -1,0 +1,11 @@
+name: torchreg
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pytorch
+  - jupyterlab
+  - pandas
+  - ipykernel
+  - matplotlib
+prefix: /home/jbuckley760/miniconda3/envs/torchreg

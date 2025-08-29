@@ -7,18 +7,44 @@ It does not achieve very good results, for a variety of reasons:
 * RNNs are not the best architecture for natural language in general
 * Lewis Carrol has a unique writing style
 
-However, the model does successfully learn _something_:
+So why bother?  For one - I'd be fascinated to have seen what Lewis Carrol's opinions would have been on modern NLP technology.
 
-> Untrained sample:  let's go to the you he towsear wh g? haj fpli pa bqu!hareenesv]'sw,[ ill gll'sj t!((zow p' nzl youv alice izden's: oen b( nb; d! [.] quinsh youv [ p bhats youu ba?l,[toyod g:z of n the and:rli
+But also, the model does successfully learn _something_:
 
-> Trained sample:  let's go to the room!   alice  i don't tell is the doors at least as if you don't tell me the stupose wid you playing at the queen off you don't tell the ready everybody excame.   alice
+> Prompt: oh, you can't help that; we're all
 
-So why bother? I think as a mathematician and a linguist he would have found language models interesting, or offensive perhaps
+> Prompt tokens: ['▁o', 'h', ',', '▁you', '▁c', 'an', "'t", '▁he', 'l', 'p', '▁t', 'hat', ';', '▁w', 'e', "'", 're', '▁a', 'll']
+
+> Untrained sample:  oh, you can't help that; we're allingliliingliliarg ogxi youghe,[lice ggonon,stonhat m n h quononononon[lilililiingliliarli)g cggxing't to g ggonhe! nan[ing hi h h hi you, you.] h o o og n pheliceorhatst qustghe quon w o o o o o o o
+
+> Trained sample:  oh, you can't help that; we're all the room rooms at the room rooms at the room rooms at the room rooms at the room rooms at the room rooms at the room rooms at the
+
+I guess we're all the rooms.  
+
+With a higher temperature:
+
+> Trained sample:  oh, you can't help that; we're all the gryphon and shouldn't everybody looks at the room right us!   alice  i don't know what is asked.   alice  i don't know what is all the room rooms at
+
+So from a prompt, the trained sample has at least started to combine tokens semi-reasonably, and occasionally use them in
+a correct sequence, i.e. it is starting to capture _some_ of the structure of English.
+
+At this point it has an entropy of around 2.3, versus around 4.6 for the untrained model.  
+This means it is going from 'choosing' from around 100 tokens to around 10 tokens at each step.
 
 It's also primarily an experiment into how to try to make a bad model, with bad data as good as it can possibly get.
 
 For example:
-* It achieves far better results with a small vocabulary.
 * It did better with a very small training rate
-* Cleaning the data to make it as standard as possible helped a lot
-* Increasing sequence length did not help particularly
+* Cleaning the data to make it as standard as possible also helped a lot
+* Tweaks to sequence length, hidden state & embedding size, vocab size hits a similar floor
+
+| Vocab Size | Entropy  | Embedding Size | Hidden Size | Seq Length | Epochs | Learning Rate | Best Epoch | Best Val Loss | Comparable Perplexity Score |
+|------------|----------|----------------|-------------|------------|--------|---------------|------------|---------------|-----------------------------|
+| 100        | 4.6052   | 50             | 64          | 5          | 20     | 0.001         | 18         | 2.4741        | 0.12                        |
+| 100        | 4.6052   | 50             | 128         | 5          | 20     | 0.001         | 10         | 2.3925        | 0.11                        |
+| 100        | 4.6052   | 50             | 128         | 10         | 20     | 0.001         | 9          | 2.4248        | 0.11                        |
+| 100        | 4.6052   | 100            | 128         | 10         | 20     | 0.001         | 8          | 2.3720        | 0.11                        |
+| 500        | 6.2146   | 100            | 128         | 5          | 20     | 0.001         | 8          | 3.9356        | 0.10                        |
+| 500        | 6.2146   | 50             | 64          | 5          | 20     | 0.001         | 16         | 4.0450        | 0.11                        |
+| 50         | 3.9120   | 50             | 64          | 5          | 20     | 0.001         | 20         | 1.8218        | 0.12                        |
+| 200        | 5.2983   | 50             | 64          | 5          | 20     | 0.001         | 18         | 3.1335        | 0.11                        |

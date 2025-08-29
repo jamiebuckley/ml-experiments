@@ -7,17 +7,19 @@ import numpy as np
 
 from config import ROOT_DIR
 
+book_url = "https://www.gutenberg.org/cache/epub/28885/pg28885.txt"
+play_url = "https://www.gutenberg.org/cache/epub/35688/pg35688.txt"
 
 class AliceInWonderlandDataset(Dataset):
-    file_url = "https://www.gutenberg.org/cache/epub/35688/pg35688.txt"
+    file_url = book_url
     raw_data_path = os.path.join(ROOT_DIR, '.rawdata', 'alice_in_wonderland.raw.txt')
-    tokenizer_path = os.path.join(ROOT_DIR, '.rawdata', 'alice_in_wonderland.tokenizer.bpe.json')
     data = ""
-    seq_length = 5
 
-    def __init__(self, train, download=False, tokenizer=None):
+    def __init__(self, train, seq_length=5, vocab_size=100, download=False, tokenizer=None):
         self.train = train
         self.tokenizer = tokenizer
+        self.seq_length = seq_length
+        self.vocab_size = vocab_size
 
         if not os.path.exists(os.path.join(ROOT_DIR, '.rawdata')):
             os.mkdir(os.path.join(ROOT_DIR, '.rawdata'))
@@ -37,22 +39,23 @@ class AliceInWonderlandDataset(Dataset):
             self.data = file.read()
 
         self.data = self.data[:self.data.find("End of Project Gutenberg's")]
-        self.data = self.data[self.data.find("_ALICE'S home. LEWIS CARROLL is discovered, playing chess."):]
+        self.data = self.data[self.data.find("*** START OF THE PROJECT GUTENBERG EBOOK"):]
 
         # Clean raw data
         self.data = self.data.lower()
+        self.data = self.data.replace('  ', ' ')
         self.data = self.data.replace('_', '')
         self.data = self.data.replace('--', ' ')
         self.data = self.data.replace('-', ' ')
         self.data = self.data.replace('\n', ' ')
 
+
         if self.tokenizer is None:
             self.tokenizer = Tokenizer(models.BPE())
             self.tokenizer.pre_tokenizer = pre_tokenizers.Metaspace()
 
-            trainer = trainers.BpeTrainer(vocab_size=100)
+            trainer = trainers.BpeTrainer(vocab_size=self.vocab_size)
             self.tokenizer.train_from_iterator(self.data.splitlines(), trainer=trainer)
-            self.tokenizer.save(self.tokenizer_path)
 
 
         tokens = self.tokenizer.encode(self.data).ids

@@ -5,7 +5,7 @@ It does not achieve very good results, for a variety of reasons:
 * The dataset is very small
 * So is the model
 * RNNs are not the best architecture for natural language in general
-* Lewis Carrol has a unique writing style
+* But mostly - Lewis Carrol has a unique writing style and therefore this is a very difficult prediction problem
 
 So why bother?  For one - I'd be fascinated to have seen what Lewis Carrol's opinions would have been on modern NLP technology.
 
@@ -30,7 +30,7 @@ With a higher temperature:
 So from a prompt, the trained sample has at least started to combine tokens semi-reasonably, and occasionally use them in
 a correct sequence, i.e. it is starting to capture _some_ of the structure of English.
 
-At this point it has an entropy of around 2.3, versus around 4.6 for the untrained model.  
+In one example, it achieves an entropy of around 2.3, versus around 4.6 for the untrained model.  
 This means it is going from 'choosing' from around 100 tokens to around 10 tokens at each step, making predictions like this:
 
 | Token | ID | Probability |
@@ -46,11 +46,11 @@ This means it is going from 'choosing' from around 100 tokens to around 10 token
 | '*' | 6 | 0.0175 |
 | 'x' | 48 | 0.0168 |
 
-This is primarily an experiment into how to try to make a bad model, with bad data as good as it can possibly get.
+This is primarily an experiment into how to try to make a simple model, with bad data as good as it can possibly get with nothing but dataset cleaning and hyperparameter tuning
 
 For example:
-* Cleaning the data to make it as standard as possible also helped a lot
-* Tweaks to sequence length, hidden state & embedding size, vocab size hits a similar floor
+* Cleaning the data to make it as standard as possible also helped a lot, lowercasing, removing strange punctuation, extra whitespace etc.
+* Tweaks to sequence length, hidden state & embedding size, vocab size all hit a similar floor
 
 | Vocab Size | Entropy  | Embedding Size | Hidden Size | Seq Length | Epochs | Learning Rate | Best Epoch | Best Val Loss | Comparable Perplexity Score |
 |------------|----------|----------------|-------------|------------|--------|---------------|------------|---------------|-----------------------------|

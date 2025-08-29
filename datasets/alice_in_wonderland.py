@@ -4,7 +4,7 @@ from torch.utils.data import Dataset
 from tokenizers import Tokenizer, models, trainers, pre_tokenizers
 import requests
 import numpy as np
-
+import re
 from config import ROOT_DIR
 
 book_url = "https://www.gutenberg.org/cache/epub/28885/pg28885.txt"
@@ -43,7 +43,7 @@ class AliceInWonderlandDataset(Dataset):
 
         # Clean raw data
         self.data = self.data.lower()
-        self.data = self.data.replace('  ', ' ')
+        self.data = re.sub(r'\s+', ' ', self.data)
         self.data = self.data.replace('_', '')
         self.data = self.data.replace('--', ' ')
         self.data = self.data.replace('-', ' ')

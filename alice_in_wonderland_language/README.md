@@ -25,16 +25,30 @@ With a higher temperature:
 
 > Trained sample:  oh, you can't help that; we're all the gryphon and shouldn't everybody looks at the room right us!   alice  i don't know what is asked.   alice  i don't know what is all the room rooms at
 
+> Trained sample:  oh, you can't help that; we're all  " "yes, you know," said the dormouse, "that's very curious to the processions of the trees of the slately for a minute: the queen's cropsing to the sea, and the queen's crolled it?" said the dormouse, "forrow, and the queen's very curious tone. "ho i wish i wish i wish i wish
+
 So from a prompt, the trained sample has at least started to combine tokens semi-reasonably, and occasionally use them in
 a correct sequence, i.e. it is starting to capture _some_ of the structure of English.
 
 At this point it has an entropy of around 2.3, versus around 4.6 for the untrained model.  
-This means it is going from 'choosing' from around 100 tokens to around 10 tokens at each step.
+This means it is going from 'choosing' from around 100 tokens to around 10 tokens at each step, making predictions like this:
 
-It's also primarily an experiment into how to try to make a bad model, with bad data as good as it can possibly get.
+| Token | ID | Probability |
+|-------|----|-----------:|
+| '▁"' | 66 | 0.2991 |
+| 'our' | 225 | 0.1164 |
+| 'id' | 81 | 0.0769 |
+| '▁' | 53 | 0.0287 |
+| ''t' | 143 | 0.0247 |
+| '1' | 11 | 0.0245 |
+| 'ought' | 232 | 0.0239 |
+| '▁and' | 75 | 0.0213 |
+| '*' | 6 | 0.0175 |
+| 'x' | 48 | 0.0168 |
+
+This is primarily an experiment into how to try to make a bad model, with bad data as good as it can possibly get.
 
 For example:
-* It did better with a very small training rate
 * Cleaning the data to make it as standard as possible also helped a lot
 * Tweaks to sequence length, hidden state & embedding size, vocab size hits a similar floor
 

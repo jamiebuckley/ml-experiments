@@ -43,11 +43,12 @@ class AliceInWonderlandDataset(Dataset):
 
         # Clean raw data
         self.data = self.data.lower()
-        self.data = re.sub(r'\s+', ' ', self.data)
+        self.data = self.data.replace('*', '')
         self.data = self.data.replace('_', '')
         self.data = self.data.replace('--', ' ')
         self.data = self.data.replace('-', ' ')
         self.data = self.data.replace('\n', ' ')
+        self.data = re.sub(r'\s+', ' ', self.data)
 
 
         if self.tokenizer is None:

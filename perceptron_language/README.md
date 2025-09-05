@@ -1,6 +1,6 @@
 # Perceptron for Language Modeling
 
-Obviously a terrible choice.
+Perceptron is a terrible choice of model for this task.
 
 Just a bit of an experiment in ways to visualise how a simple model
-treats language prediction with `imshow`
+treats language prediction using `imshow`[__init__.py](../__init__.py)

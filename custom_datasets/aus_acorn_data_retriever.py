@@ -5,6 +5,7 @@ import tarfile
 import logging
 from glob import glob
 import pandas as pd
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -111,6 +112,8 @@ class AusAcornSatDataRetriever:
             start_of_data_collection = pd.Timestamp('1910-01-01')
             df['days_since_start'] = (df['date'] - start_of_data_collection).dt.days
             df['days_since_start_of_year'] = df['date'].dt.dayofyear
+            df['days_ssoy_sin'] = np.sin(2 * np.pi * df['days_since_start_of_year'] / 365)
+            df['days_ssoy_cos'] = np.cos(2 * np.pi * df['days_since_start_of_year'] / 365)
             df.drop(['date'], axis=1, inplace=True)
             datasets.append(df)
 

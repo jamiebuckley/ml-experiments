@@ -17,7 +17,7 @@ class AusAcornSatData(Dataset):
     min_values = {}
     max_values = {}
 
-    def __init__(self, mode, train=True):
+    def __init__(self, mode, train=True, subset=0):
         self.mode = mode
         self.parquet_path = os.path.join(self.raw_acorn_sat_path, self.mode + '.parquet')
         if not os.path.exists(self.parquet_path):
@@ -25,10 +25,14 @@ class AusAcornSatData(Dataset):
 
         df = pd.read_parquet(self.parquet_path)
 
-        # smaller subset of data
-        df = df.iloc[::10]
+        # Reduce data set size to run on my terrible GPU
+        if subset > 0:
+            df = df.iloc[::subset]
 
-        for col in [mode, 'lat', 'lon', 'elevation', 'days_since_start', 'days_since_start_of_year']:
+        self.cols = [mode, 'lat', 'lon', 'elevation', 'days_since_start', 'days_ssoy_sin', 'days_ssoy_cos']
+        self.feature_cols = [item for item in self.cols if item != mode]
+
+        for col in self.cols:
             self.min_values[col] = c_min = df[col].min()
             self.max_values[col] = c_max = df[col].max()
             df[col] = (df[col] - c_min) / (c_max - c_min)
@@ -39,9 +43,9 @@ class AusAcornSatData(Dataset):
             df = df_train
         else:
            df = df_val
-        self.df = df
 
-        self.features = df[['lat', 'lon', 'elevation', 'days_since_start', 'days_since_start_of_year']].values.astype('float32')
+        self.df = df
+        self.features = df[self.feature_cols].values.astype('float32')
         self.targets = df[mode].values.astype('float32')
 
     def __len__(self):
@@ -54,16 +58,19 @@ class AusAcornSatData(Dataset):
 
     def normalize(self, values):
         norm = {}
-        for col in ['lat', 'lon', 'elevation', 'days_since_start', 'days_since_start_of_year']:
+        for col in self.feature_cols:
             c_min = self.min_values[col]
             c_max = self.max_values[col]
             norm[col] = (values[col] - c_min) / (c_max - c_min)
+
+        # todo, improve this for feature col tweaking
         x = torch.tensor([
             norm['lat'],
             norm['lon'],
             norm['elevation'],
             norm['days_since_start'],
-            norm['days_since_start_of_year']
+            values['days_ssoy_sin'],
+            values['days_ssoy_cos']
         ], dtype=torch.float32)
         return x
 

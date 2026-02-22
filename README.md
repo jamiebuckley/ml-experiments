@@ -23,3 +23,10 @@ A very simple linear model of [Acorn Surface Air Temperature Weather Stations](h
 Experiments in trying to train an RNN on next-word prediction for Alice in Wonderland as an arbitrarily difficult text
 * Dataset quality and cleaning, and effect
 * Effects of various hyperparameters 
+
+
+### Installing torch for an old GPU - because I keep forgetting this 
+
+```
+pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu118
+```

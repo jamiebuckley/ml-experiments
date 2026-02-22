@@ -1,0 +1,3 @@
+jupyterlab
+ipykernel
+pandas-stubs

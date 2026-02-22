@@ -24,6 +24,10 @@ Experiments in trying to train an RNN on next-word prediction for Alice in Wonde
 * Dataset quality and cleaning, and effect
 * Effects of various hyperparameters 
 
+### sagemaker_simple/
+A rough template for using Sagemaker to train a model
+handling local and training-job execution
+
 
 ### Installing torch for an old GPU - because I keep forgetting this 
 
